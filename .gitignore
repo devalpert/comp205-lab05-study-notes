@@ -50,3 +50,4 @@ android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 # settings passed with --dart-define-from-file
 config.json
+firebase.json
