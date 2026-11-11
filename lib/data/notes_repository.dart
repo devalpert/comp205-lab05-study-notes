@@ -18,22 +18,24 @@ class NotesRepository {
   /// orderBy('createdAt', descending: true), .snapshots(), then map every
   /// snapshot to a `List<Note>` with Note.fromFirestore(doc.id, doc.data()).
   Stream<List<Note>> watchNotes(String uid) {
-    // TODO(3)
-    throw UnimplementedError('watchNotes');
+    return _notes(uid)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Note.fromFirestore(doc.id, doc.data()))
+            .toList());
   }
 
   /// Adds a note. Title and body are trimmed. Throws an ArgumentError if the
   /// trimmed title is empty or longer than 100 characters.
   Future<void> addNote(String uid, String title, String body) async {
-    // TODO(3)
-    throw UnimplementedError('addNote');
+    final t = title.trim();
+    if (t.isEmpty || t.length > 100) {
+      throw ArgumentError.value(title, 'title', 'must be 1 to 100 characters');
+    }
+    final note = Note(id: '', title: t, body: body.trim());
+    await _notes(uid).add(note.toFirestore());
   }
 
-  Future<void> deleteNote(String uid, String noteId) async {
-    // TODO(3)
-    throw UnimplementedError('deleteNote');
-  }
+  Future<void> deleteNote(String uid, String noteId) => _notes(uid).doc(noteId).delete();
 }
-
-// Remove this line when you are done:
-// ignore_for_file: unused_element
